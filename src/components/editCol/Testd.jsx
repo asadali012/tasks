@@ -48,7 +48,7 @@ export default function Testd() {
             .then((data) => setRows(data));
     }, []);
 
-    const newCol = () => {
+    const newCol = (add) => {
         setColumn([...column, {
             feild: add
         }]);
