@@ -39,7 +39,6 @@ export default function Testd() {
             filterable: false,
             renderCell: (params) => <img src={params.value} alt="Product" style={{ border: '1px solid #ddd', width: '90%', height: '90%', objectFit: 'cover' }} />
         },
-
     ])
 
     useEffect(() => {
@@ -49,9 +48,14 @@ export default function Testd() {
     }, []);
 
     const newCol = (add) => {
+        console.log("add value", add)
         setColumn([...column, {
-            feild: add
-        }]);
+            field: add,
+            headerName: add,
+            width: 300,
+            editable: true,
+        }])
+        setShowDialog(false)
     };
 
     return (
@@ -68,7 +72,7 @@ export default function Testd() {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button variant='contained' color='primary' onClick={(add) => newCol(add)}>Update</Button>
+                        <Button variant='contained' color='primary' onClick={() => newCol(add)}>Update</Button>
                         <Button variant='oultined' color="error" onClick={() => setShowDialog(false)}>Cancel</Button>
                     </DialogActions>
                 </Dialog>
