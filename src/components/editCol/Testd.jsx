@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useState, useEffect } from 'react';
-import { Button, Container, Dialog, DialogActions, DialogContent, TextField } from '@mui/material';
+import { Button, Container, Dialog, DialogActions, DialogContent, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 
 export default function Testd() {
@@ -14,6 +14,8 @@ export default function Testd() {
     const [pinnedColumns, setPinnedColumns] = React.useState({
         left: ['name'],
     });
+
+
 
     const handlePinnedColumnsChange = React.useCallback((updatedPinnedColumns) => {
         setPinnedColumns(updatedPinnedColumns);
@@ -33,13 +35,13 @@ export default function Testd() {
             editable: false,
             renderCell: (params) => { return params.value < 50 ? <p>PKR {params.value}</p> : <p>USD {params.value}</p> }
         },
-        {
-            field: 'description',
-            headerName: 'Description',
-            width: 500,
-            sortable: false,
-            editable: false,
-        },
+        // {
+        //     field: 'description',
+        //     headerName: 'Description',
+        //     width: 500,
+        //     sortable: false,
+        //     editable: false,
+        // },
         {
             field: 'image',
             headerName: 'Image',
@@ -54,6 +56,7 @@ export default function Testd() {
         fetch("https://fakestoreapi.com/products")
             .then((response) => response.json())
             .then((data) => setRows(data));
+
     }, []);
 
     const newCol = (add) => {
@@ -72,12 +75,21 @@ export default function Testd() {
             <Container >
                 <Dialog open={showDialog}>
                     <DialogContent>
-                        <TextField
-                            label='Column Name'
-                            placeholder='Enter Column Name...'
-                            onChange={(e) => setAdd(e.target.value)}
-                            fullWidth
-                        />
+                        <FormControl required sx={{ m: 1, minWidth: 400 }}>
+                            <InputLabel id="">Select Column</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-required-label"
+                                id="demo-simple-select-required"
+                                value={add}
+                                label="Select Column *"
+                                onChange={(e) => setAdd(e.target.value)}
+                            >
+                                {rows.map((data) => (
+                                    <MenuItem key={data.id} value={data.id}>{data.title}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {/* ------------ */}
                     </DialogContent>
                     <DialogActions>
                         <Button variant='contained' color='primary' onClick={() => newCol(add)}>Update</Button>
@@ -88,7 +100,7 @@ export default function Testd() {
                     Add Column
                 </Button>
                 <Box sx={{ height: 500, width: '100', background: "white", border: "1px solid #2c3e50", borderRadius: "10px" }}>
-                    <DataGridPro
+                    <DataGrid
                         sx={{ background: "white", border: "1px solid #2c3e50", borderRadius: "10px" }}
                         rows={rows}
                         columns={column}
@@ -96,11 +108,7 @@ export default function Testd() {
                         onPinnedColumnsChange={handlePinnedColumnsChange}
                         initialState={{
                             pagination: {
-                                paginationModel: {
-                                    pageSize: 10,
-                                },
-                            }, pinnedColumns: {
-                                left: ["id"],
+                                paginationModel: { pageSize: 10 },
                             },
                         }}
                         pageSizeOptions={[5, 10, 25]}
