@@ -1,14 +1,23 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useState, useEffect } from 'react';
-import { Button, Container, Dialog, DialogActions, DialogTitle, DialogContent, TextField } from '@mui/material';
+import { Button, Container, Dialog, DialogActions, DialogContent, TextField } from '@mui/material';
+
 
 export default function Testd() {
 
     const [rows, setRows] = useState([])
     const [showDialog, setShowDialog] = useState(false)
     const [add, setAdd] = useState('')
+    const [pinnedColumns, setPinnedColumns] = React.useState({
+        left: ['name'],
+    });
+
+    const handlePinnedColumnsChange = React.useCallback((updatedPinnedColumns) => {
+        setPinnedColumns(updatedPinnedColumns);
+    }, []);
     const [column, setColumn] = useState([
         { field: 'id', headerName: 'ID', editable: false },
         {
@@ -62,7 +71,6 @@ export default function Testd() {
         <div style={{ background: "white", height: "100vh" }}>
             <Container >
                 <Dialog open={showDialog}>
-                    <DialogTitle>Add Column</DialogTitle>
                     <DialogContent>
                         <TextField
                             label='Column Name'
@@ -80,19 +88,22 @@ export default function Testd() {
                     Add Column
                 </Button>
                 <Box sx={{ height: 500, width: '100', background: "white", border: "1px solid #2c3e50", borderRadius: "10px" }}>
-                    <DataGrid
+                    <DataGridPro
                         sx={{ background: "white", border: "1px solid #2c3e50", borderRadius: "10px" }}
                         rows={rows}
                         columns={column}
+                        pinnedColumns={pinnedColumns}
+                        onPinnedColumnsChange={handlePinnedColumnsChange}
                         initialState={{
                             pagination: {
                                 paginationModel: {
                                     pageSize: 10,
                                 },
+                            }, pinnedColumns: {
+                                left: ["id"],
                             },
                         }}
                         pageSizeOptions={[5, 10, 25]}
-                    // disableRowSelectionOnClick
                     />
                 </Box>
             </Container>
