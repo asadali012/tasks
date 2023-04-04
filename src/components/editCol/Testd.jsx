@@ -11,15 +11,7 @@ export default function Testd() {
     const [rows, setRows] = useState([])
     const [showDialog, setShowDialog] = useState(false)
     const [add, setAdd] = useState('')
-    const [pinnedColumns, setPinnedColumns] = React.useState({
-        left: ['name'],
-    });
 
-
-
-    const handlePinnedColumnsChange = React.useCallback((updatedPinnedColumns) => {
-        setPinnedColumns(updatedPinnedColumns);
-    }, []);
     const [column, setColumn] = useState([
         { field: 'id', headerName: 'ID', editable: false },
         {
@@ -35,13 +27,7 @@ export default function Testd() {
             editable: false,
             renderCell: (params) => { return params.value < 50 ? <p>PKR {params.value}</p> : <p>USD {params.value}</p> }
         },
-        // {
-        //     field: 'description',
-        //     headerName: 'Description',
-        //     width: 500,
-        //     sortable: false,
-        //     editable: false,
-        // },
+
         {
             field: 'image',
             headerName: 'Image',
@@ -51,6 +37,13 @@ export default function Testd() {
             renderCell: (params) => <img src={params.value} alt="Product" style={{ border: '1px solid #ddd', width: '90%', height: '90%', objectFit: 'cover' }} />
         },
     ])
+    const [pinnedColumns, setPinnedColumns] = React.useState({
+        left: ['name'],
+    });
+
+    const handlePinnedColumnsChange = React.useCallback((updatedPinnedColumns) => {
+        setPinnedColumns(updatedPinnedColumns);
+    }, []);
 
     useEffect(() => {
         fetch("https://fakestoreapi.com/products")
@@ -66,6 +59,7 @@ export default function Testd() {
             headerName: add,
             width: 300,
             editable: true,
+            filterable: false,
         }])
         setShowDialog(false)
     };
@@ -84,11 +78,20 @@ export default function Testd() {
                                 label="Select Column *"
                                 onChange={(e) => setAdd(e.target.value)}
                             >
-                                {rows.map((data) => (
-                                    <MenuItem key={data.id} value={data.id}>{data.title}</MenuItem>
-                                ))}
+                                {rows.map((data, index) => {
+                                    if (index < 1)
+                                        return (
+                                            Object.keys(data).filter((x) => !column.map((y) => y.field).includes(x)).map((option) => {
+                                                return (
+                                                    <MenuItem id={option} value={option}>{option}</MenuItem>
+                                                )
+                                            })
+                                        )
+                                }
+                                )}
                             </Select>
                         </FormControl>
+
                         {/* ------------ */}
                     </DialogContent>
                     <DialogActions>
