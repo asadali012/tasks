@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useState, useEffect } from 'react';
-import { Button, Container, Dialog, DialogActions, DialogContent, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-
+import { Button, Container, Dialog, DialogActions, DialogContent, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import PriceCal from './PriceCal';
 
 export default function Testd() {
 
@@ -25,7 +25,9 @@ export default function Testd() {
             headerName: 'Price',
             width: 100,
             editable: false,
-            renderCell: (params) => { return params.value < 50 ? <p>PKR {params.value}</p> : <p>USD {params.value}</p> }
+            // renderCell: (params) => { return params.value < 50 ? <p>PKR {params.value}</p> : <p>USD {params.value}</p> }
+            // renderCell: (params) => PriceCal(params)
+            renderCell: (params) => <PriceCal params={params} />
         },
 
         {
@@ -82,8 +84,15 @@ export default function Testd() {
                                     if (index < 1)
                                         return (
                                             Object.keys(data).filter((x) => !column.map((y) => y.field).includes(x)).map((option) => {
+                                                console.log(data.id)
                                                 return (
-                                                    <MenuItem id={option} value={option}>{option}</MenuItem>
+                                                    <MenuItem
+                                                        id={option}
+                                                        value={option}
+                                                    // sx={{ display: "inline-flex", width: "50%" }}
+                                                    >
+                                                        <h5>{option}</h5> <span sx={{ color: "lightgray", }}>1234</span>
+                                                    </MenuItem>
                                                 )
                                             })
                                         )
@@ -91,7 +100,6 @@ export default function Testd() {
                                 )}
                             </Select>
                         </FormControl>
-
                         {/* ------------ */}
                     </DialogContent>
                     <DialogActions>
